@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Ranjan\\Desktop\\vestshed\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|c:\\users\\ranjan\\desktop\\vestshed\\vestshed\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|solutionrelative:vestshed\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ApplicationDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Data\\ApplicationDbContext.cs",
+              "RelativeDocumentMoniker": "vestshed\\Data\\ApplicationDbContext.cs",
+              "ToolTip": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Data\\ApplicationDbContext.cs",
+              "RelativeToolTip": "vestshed\\Data\\ApplicationDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-15T07:11:00.688Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
