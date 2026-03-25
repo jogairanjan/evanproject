@@ -1,0 +1,665 @@
+{
+	"info": {
+		"_postman_id": "vestshed-api-collection",
+		"name": "VetShed API Collection",
+		"description": "Complete API collection for VetShed veterinary service management system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://localhost:7080/api",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Employees API",
+			"item": [
+				{
+					"name": "Create Employee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"employeeCode\": \"EMP001\",\n  \"serviceproviderid\": \"SP001\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"fullName\": \"John Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"phoneNumber\": \"+1234567890\",\n  \"alternatePhone\": \"+1234567891\",\n  \"dateOfBirth\": \"1990-01-01T00:00:00Z\",\n  \"gender\": \"Male\",\n  \"address\": \"123 Main St\",\n  \"city\": \"New York\",\n  \"state\": \"NY\",\n  \"zipCode\": \"10001\",\n  \"country\": \"USA\",\n  \"employeeType\": \"Full-time\",\n  \"department\": \"Veterinary\",\n  \"position\": \"Veterinarian\",\n  \"jobTitle\": \"Senior Veterinarian\",\n  \"hireDate\": \"2024-01-01T00:00:00Z\",\n  \"startDate\": \"2024-01-01T00:00:00Z\",\n  \"workSchedule\": \"Monday-Friday\",\n  \"defaultStartTime\": \"09:00:00\",\n  \"defaultEndTime\": \"17:00:00\",\n  \"weeklyHours\": 40.0,\n  \"isFlexibleSchedule\": true,\n  \"payType\": \"Salary\",\n  \"payRate\": 75000.0,\n  \"currency\": \"USD\",\n  \"skills\": \"Surgery, Diagnostics\",\n  \"certifications\": \"DVM, ACVS\",\n  \"yearsOfExperience\": 5,\n  \"bio\": \"Experienced veterinarian specializing in small animals\",\n  \"maxDailyAppointments\": 15,\n  \"canAcceptNewClients\": true,\n  \"role\": \"Veterinarian\",\n  \"canManageOwnSchedule\": true,\n  \"canViewReports\": true,\n  \"canManageClients\": true,\n  \"status\": \"Active\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/employees",
+							"host": ["{{baseUrl}}"],
+							"path": ["employees"]
+						}
+					}
+				},
+				{
+					"name": "Get All Employees",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/employees",
+							"host": ["{{baseUrl}}"],
+							"path": ["employees"]
+						}
+					}
+				},
+				{
+					"name": "Get Employee by ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/employees/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["employees", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Employee",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"John Updated\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe.updated@example.com\",\n  \"phoneNumber\": \"+1234567890\",\n  \"status\": \"Active\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/employees/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["employees", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Employee",
+					"request": {
+						"method": "DELETE",
+						"url": {
+							"raw": "{{baseUrl}}/employees/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["employees", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Locations API",
+			"item": [
+				{
+					"name": "Create Location",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"serviceProviderId\": 1,\n  \"locationName\": \"Downtown Veterinary Clinic\",\n  \"manager\": \"Jane Smith\",\n  \"address\": \"456 Oak Street\",\n  \"cityId\": 1,\n  \"stateId\": 1,\n  \"zipCode\": \"10002\",\n  \"phone\": \"+1234567892\",\n  \"wMail\": \"downtown@vetclinic.com\",\n  \"status\": \"Active\",\n  \"assignedServices\": \"Checkup, Surgery, Grooming\",\n  \"assignedEmployees\": \"1,2,3\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/locations",
+							"host": ["{{baseUrl}}"],
+							"path": ["locations"]
+						}
+					}
+				},
+				{
+					"name": "Get All Locations",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/locations",
+							"host": ["{{baseUrl}}"],
+							"path": ["locations"]
+						}
+					}
+				},
+				{
+					"name": "Get Location by ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/locations/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["locations", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Location",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"locationName\": \"Downtown Veterinary Clinic Updated\",\n  \"manager\": \"Jane Smith Updated\",\n  \"phone\": \"+1234567893\",\n  \"status\": \"Active\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/locations/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["locations", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Location",
+					"request": {
+						"method": "DELETE",
+						"url": {
+							"raw": "{{baseUrl}}/locations/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["locations", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Pet Parents API",
+			"item": [
+				{
+					"name": "Create Pet Parent",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Alice\",\n  \"lastName\": \"Johnson\",\n  \"email\": \"alice.johnson@example.com\",\n  \"phoneNumber\": \"+1234567894\",\n  \"address\": \"789 Pine Street\",\n  \"city\": \"New York\",\n  \"state\": \"NY\",\n  \"zip\": \"10003\",\n  \"preferredContactMethod\": \"Email\",\n  \"serviceProviderId\": 1,\n  \"isActive\": true,\n  \"password\": \"SecurePassword123\",\n  \"accountSecurity\": \"High\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/petparents",
+							"host": ["{{baseUrl}}"],
+							"path": ["petparents"]
+						}
+					}
+				},
+				{
+					"name": "Pet Parent Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"alice.johnson@example.com\",\n  \"password\": \"SecurePassword123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/petparents/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["petparents", "login"]
+						}
+					}
+				},
+				{
+					"name": "Create Pet Parent with Pet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"bob.smith@example.com\",\n  \"password\": \"SecurePassword456\",\n  \"fullName\": \"Bob Smith\",\n  \"status\": 1,\n  \"petName\": \"Buddy\",\n  \"species\": \"Dog\",\n  \"breed\": \"Golden Retriever\",\n  \"age\": 3,\n  \"sex\": \"Male\",\n  \"microchipped\": true,\n  \"spayed\": false,\n  \"allergies\": \"None\",\n  \"vaccination\": \"Up to date\",\n  \"medications\": \"None\",\n  \"lastVisit\": \"2024-01-15T00:00:00Z\",\n  \"reasonForVisit\": \"Annual checkup\",\n  \"medicalHistory\": \"Healthy\",\n  \"petStatus\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/petparents/with-pet",
+							"host": ["{{baseUrl}}"],
+							"path": ["petparents", "with-pet"]
+						}
+					}
+				},
+				{
+					"name": "Get All Pet Parents",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/petparents",
+							"host": ["{{baseUrl}}"],
+							"path": ["petparents"]
+						}
+					}
+				},
+				{
+					"name": "Get Pet Parent by ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/petparents/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["petparents", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Pets API",
+			"item": [
+				{
+					"name": "Create Pet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"petName\": \"Whiskers\",\n  \"petParentId\": 1,\n  \"species\": \"Cat\",\n  \"breed\": \"Persian\",\n  \"age\": 2,\n  \"sex\": \"Female\",\n  \"microchipId\": \"MC123456789\",\n  \"allergies\": \"Fish\",\n  \"medications\": \"None\",\n  \"serviceProviderId\": 1,\n  \"isActive\": true,\n  \"spayed\": true,\n  \"microchipped\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pets",
+							"host": ["{{baseUrl}}"],
+							"path": ["pets"]
+						}
+					}
+				},
+				{
+					"name": "Get All Pets",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/pets",
+							"host": ["{{baseUrl}}"],
+							"path": ["pets"]
+						}
+					}
+				},
+				{
+					"name": "Get Pet by ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/pets/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["pets", "1"]
+						}
+					}
+				},
+				{
+					"name": "Get Pets by Pet Parent ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/pets/by-pet-parent/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["pets", "by-pet-parent", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Pet",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"petName\": \"Whiskers Updated\",\n  \"age\": 3,\n  \"allergies\": \"Fish, Chicken\",\n  \"isActive\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pets/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["pets", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Pet",
+					"request": {
+						"method": "DELETE",
+						"url": {
+							"raw": "{{baseUrl}}/pets/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["pets", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Provider Onboarding API",
+			"item": [
+				{
+					"name": "Test Database Connection",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/provideronboarding/test-connection",
+							"host": ["{{baseUrl}}"],
+							"path": ["provideronboarding", "test-connection"]
+						}
+					}
+				},
+				{
+					"name": "Insert Provider Onboarding",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"currentStep\": 1,\n  \"progressPercentage\": 25,\n  \"status\": \"In Progress\",\n  \"accountType\": \"Business\",\n  \"businessName\": \"Happy Pets Veterinary\",\n  \"ownerName\": \"Dr. Sarah Wilson\",\n  \"email\": \"sarah.wilson@happypets.com\",\n  \"phoneNumber\": \"+1234567895\",\n  \"passwordHash\": \"hashedpassword123\",\n  \"isGoogleSignUp\": false,\n  \"selectedServices\": \"Checkup, Surgery, Grooming\",\n  \"baseFeeService\": \"Checkup\",\n  \"baseFeeAmount\": 50.0,\n  \"teamSize\": 5,\n  \"teamSizeMin\": 3,\n  \"teamSizeMax\": 10,\n  \"numberOfLocations\": 2,\n  \"isMobileService\": false,\n  \"tierName\": \"Professional\",\n  \"baseSurchargePerLocation\": 25.0,\n  \"locationDiscountPercentage\": 10.0,\n  \"adminBundleSize\": 3,\n  \"adminBundlePrice\": 150.0,\n  \"allowProvidersManageSchedule\": true,\n  \"locationSurchargeTotal\": 50.0,\n  \"multiLocationDiscount\": 5.0,\n  \"totalMonthly\": 195.0,\n  \"pricingFormula\": \"Base + Location Surcharge - Discount\",\n  \"paymentProvider\": \"Stripe\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/provideronboarding/insert",
+							"host": ["{{baseUrl}}"],
+							"path": ["provideronboarding", "insert"]
+						}
+					}
+				},
+				{
+					"name": "Move Provider Onboarding",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tempProviderId\": \"TEMP123\",\n  \"paymentCustomerId\": \"cus_stripe123\",\n  \"paymentMethodId\": \"pm_stripe456\",\n  \"cardLast4\": \"4242\",\n  \"cardBrand\": \"Visa\",\n  \"cardExpiry\": \"12/25\",\n  \"billingZip\": \"10001\",\n  \"paymentStatus\": \"Active\",\n  \"termsAccepted\": true,\n  \"termsAcceptedDate\": \"2024-01-01T00:00:00Z\",\n  \"termsVersion\": \"1.0\",\n  \"termsIPAddress\": \"192.168.1.1\",\n  \"idLicenseStatus\": \"Verified\",\n  \"businessLicenseStatus\": \"Verified\",\n  \"insuranceCertStatus\": \"Verified\",\n  \"backgroundCheckStatus\": \"Passed\",\n  \"identityVerified\": true,\n  \"criminalCheckPassed\": true,\n  \"sexOffenderCheckPassed\": true,\n  \"referenceCheckPassed\": true,\n  \"backgroundCheckDate\": \"2024-01-01T00:00:00Z\",\n  \"serviceProviderName\": \"Happy Pets Veterinary\",\n  \"smallDescription\": \"Full-service veterinary clinic\",\n  \"specialties\": \"Small animals, Surgery\",\n  \"hoursOfOperation\": \"Mon-Fri 8AM-6PM\",\n  \"hasInsuranceCoverage\": true,\n  \"enableGeolocationMap\": true,\n  \"latitude\": 40.7128,\n  \"longitude\": -74.0060,\n  \"address\": \"123 Vet Street\",\n  \"city\": \"New York\",\n  \"state\": \"NY\",\n  \"zipCode\": \"10001\",\n  \"profileCompleteness\": 100,\n  \"availableDays\": \"Monday,Tuesday,Wednesday,Thursday,Friday\",\n  \"scheduleStartTime\": \"08:00:00\",\n  \"scheduleEndTime\": \"18:00:00\",\n  \"slotDurationMinutes\": 30,\n  \"slotCapacity\": 4,\n  \"enableWaitlist\": true,\n  \"enableGPSTagging\": true,\n  \"autoConfirmBookings\": false,\n  \"requireDeposit\": true,\n  \"depositPercentage\": 25.0,\n  \"cancellationPolicyHours\": 24,\n  \"cancellationFeePercentage\": 50.0,\n  \"sendReminderEmails\": true,\n  \"reminderHoursBefore\": 24,\n  \"allowRescheduling\": true,\n  \"rescheduleHoursBefore\": 12,\n  \"requireNewClientApproval\": false,\n  \"isReviewed\": true,\n  \"reviewedDate\": \"2024-01-01T00:00:00Z\",\n  \"isApproved\": true,\n  \"approvedDate\": \"2024-01-01T00:00:00Z\",\n  \"approvedBy\": 1,\n  \"isLive\": true,\n  \"goLiveDate\": \"2024-01-01T00:00:00Z\",\n  \"welcomeEmailSent\": true,\n  \"userId\": 1,\n  \"startedDate\": \"2024-01-01T00:00:00Z\",\n  \"lastActivityDate\": \"2024-01-01T00:00:00Z\",\n  \"completedDate\": \"2024-01-01T00:00:00Z\",\n  \"createdDate\": \"2024-01-01T00:00:00Z\",\n  \"modifiedDate\": \"2024-01-01T00:00:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/provideronboarding/move",
+							"host": ["{{baseUrl}}"],
+							"path": ["provideronboarding", "move"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Servicebook API",
+			"item": [
+				{
+					"name": "Get All Servicebook Details",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/servicebook",
+							"host": ["{{baseUrl}}"],
+							"path": ["servicebook"]
+						}
+					}
+				},
+				{
+					"name": "Get Servicebook Details by ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/servicebook/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["servicebook", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Service Feedback API",
+			"item": [
+				{
+					"name": "Create Service Feedback",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"employeeId\": 1,\n  \"petParentId\": 1,\n  \"petId\": 1,\n  \"bookingDate\": \"2024-02-01T00:00:00Z\",\n  \"bookingTime\": \"10:00:00\",\n  \"checkInStatus\": \"Pending\",\n  \"status\": \"Scheduled\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/servicefeedback",
+							"host": ["{{baseUrl}}"],
+							"path": ["servicefeedback"]
+						}
+					}
+				},
+				{
+					"name": "Update Location and Employee",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1,\n  \"locationId\": 1,\n  \"employeeId\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/servicefeedback/update-location-employee",
+							"host": ["{{baseUrl}}"],
+							"path": ["servicefeedback", "update-location-employee"]
+						}
+					}
+				},
+				{
+					"name": "Update Booking",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1,\n  \"bookingDate\": \"2024-02-02T00:00:00Z\",\n  \"bookingTime\": \"14:00:00\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/servicefeedback/update-booking",
+							"host": ["{{baseUrl}}"],
+							"path": ["servicefeedback", "update-booking"]
+						}
+					}
+				},
+				{
+					"name": "Update Check-In",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1,\n  \"checkInDate\": \"2024-02-02T00:00:00Z\",\n  \"checkInTime\": \"13:45:00\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/servicefeedback/update-checkin",
+							"host": ["{{baseUrl}}"],
+							"path": ["servicefeedback", "update-checkin"]
+						}
+					}
+				},
+				{
+					"name": "Update Check-Out",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1,\n  \"checkOutDate\": \"2024-02-02T00:00:00Z\",\n  \"checkOutTime\": \"15:30:00\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/servicefeedback/update-checkout",
+							"host": ["{{baseUrl}}"],
+							"path": ["servicefeedback", "update-checkout"]
+						}
+					}
+				},
+				{
+					"name": "Update Ratings",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 1,\n  \"overallExperience\": 5,\n  \"serviceQuality\": 5,\n  \"staffFriendliness\": 4,\n  \"cleanliness\": 5,\n  \"valueForMoney\": 4,\n  \"experience\": \"Excellent service! The staff was very professional and caring.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/servicefeedback/update-ratings",
+							"host": ["{{baseUrl}}"],
+							"path": ["servicefeedback", "update-ratings"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Service Orders API",
+			"item": [
+				{
+					"name": "Create Service Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"serviceProviderId\": 1,\n  \"petParentId\": 1,\n  \"locationId\": 1,\n  \"items\": \"Annual Checkup, Vaccination\",\n  \"quantity\": \"1, 2\",\n  \"amount\": \"150.00\",\n  \"careNotes\": \"Pet is nervous around strangers\",\n  \"paymentTerms\": \"Payment due at service\",\n  \"depositPercentage\": 25.0,\n  \"anyTip\": 15.0,\n  \"requestData\": \"{\\\"specialRequests\\\": \\\"Please be gentle\\\"}\",\n  \"responseData\": \"{\\\"status\\\": \\\"confirmed\\\"}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/serviceorders",
+							"host": ["{{baseUrl}}"],
+							"path": ["serviceorders"]
+						}
+					}
+				},
+				{
+					"name": "Get All Service Orders",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/serviceorders",
+							"host": ["{{baseUrl}}"],
+							"path": ["serviceorders"]
+						}
+					}
+				},
+				{
+					"name": "Get Service Order by ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/serviceorders/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["serviceorders", "1"]
+						}
+					}
+				},
+				{
+					"name": "Get Service Orders by Pet Parent ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/serviceorders/by-pet-parent/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["serviceorders", "by-pet-parent", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Service Order",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": \"Annual Checkup, Vaccination, Grooming\",\n  \"quantity\": \"1, 2, 1\",\n  \"amount\": \"200.00\",\n  \"careNotes\": \"Pet is nervous around strangers. Updated to include grooming.\",\n  \"anyTip\": 20.0\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/serviceorders/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["serviceorders", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Service Order",
+					"request": {
+						"method": "DELETE",
+						"url": {
+							"raw": "{{baseUrl}}/serviceorders/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["serviceorders", "1"]
+						}
+					}
+				}
+			]
+		}
+	]
+}

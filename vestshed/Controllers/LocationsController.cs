@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using vestshed.Data;
 using vestshed.Models;
@@ -6,6 +7,7 @@ namespace vestshed.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class LocationsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -214,6 +216,48 @@ namespace vestshed.Controllers
         }
 
         /// <summary>
+        /// Get locations by Service Provider ID
+        /// </summary>
+        /// <param name="serviceProviderId">Service Provider ID</param>
+        /// <returns>List of locations for the specified service provider</returns>
+        [HttpGet("by-service-provider/{serviceProviderId}")]
+        public async Task<ActionResult<LocationResponse>> GetLocationsByServiceProviderId(int serviceProviderId)
+        {
+            try
+            {
+                if (serviceProviderId <= 0)
+                {
+                    return BadRequest(new LocationResponse
+                    {
+                        Success = false,
+                        Message = "Invalid service provider ID"
+                    });
+                }
+
+                var request = new LocationRequest { ServiceProviderId = serviceProviderId };
+                _logger.LogInformation("Retrieving locations for service provider ID: {ServiceProviderId}", serviceProviderId);
+
+                var result = await _context.LocationsCRUDAsync("GETBYSERVICEPROVIDERID", request);
+
+                return Ok(new LocationResponse
+                {
+                    Success = true,
+                    Message = "Locations retrieved successfully",
+                    Data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving locations for service provider ID: {ServiceProviderId}", serviceProviderId);
+                return StatusCode(500, new LocationResponse
+                {
+                    Success = false,
+                    Message = $"An error occurred: {ex.Message}"
+                });
+            }
+        }
+
+        /// <summary>
         /// Get all locations
         /// </summary>
         /// <returns>List of all locations</returns>
@@ -246,6 +290,7 @@ namespace vestshed.Controllers
         }
     }
 }
+
 
 
 

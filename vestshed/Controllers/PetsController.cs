@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using vestshed.Data;
 using vestshed.Models;
@@ -288,6 +289,7 @@ namespace vestshed.Controllers
         }
     }
 }
+
 
 
 

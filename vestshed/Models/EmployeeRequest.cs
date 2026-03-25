@@ -7,7 +7,10 @@ namespace vestshed.Models
 
         // Employee basic information
         public string? EmployeeCode { get; set; }
-        public string? Serviceproviderid { get; set; }
+        
+        // Support both string and integer for serviceproviderid
+        public object? Serviceproviderid { get; set; }
+        
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? FullName { get; set; }
@@ -104,7 +107,16 @@ namespace vestshed.Models
         public int? NewEmployeeId { get; set; }
         public object? Data { get; set; }
     }
+
+    /// <summary>
+    /// Wrapper model for API requests that include a "request" property
+    /// </summary>
+    public class EmployeeRequestWrapper
+    {
+        public EmployeeRequest Request { get; set; } = new EmployeeRequest();
+    }
 }
+
 
 
 

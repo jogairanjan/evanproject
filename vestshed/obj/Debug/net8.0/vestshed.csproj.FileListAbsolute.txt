@@ -1,3 +1,5 @@
+C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Debug\net8.0\appsettings - Copy.Development.json
+C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Debug\net8.0\appsettings - Copy.json
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Debug\net8.0\appsettings.json
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Debug\net8.0\vestshed.staticwebassets.endpoints.json
@@ -9,6 +11,7 @@ C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Debug\net8.0\vestshed.pdb
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Debug\net8.0\Azure.Core.dll
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Debug\net8.0\Azure.Identity.dll
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Debug\net8.0\Humanizer.dll
+C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.dll
@@ -122,6 +125,7 @@ C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Debug\net8.0\vestshed.AssemblyInfo
 C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Debug\net8.0\vestshed.csproj.CoreCompileInputs.cache
 C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Debug\net8.0\vestshed.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Debug\net8.0\vestshed.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Debug\net8.0\vestshed.sourcelink.json
 C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
@@ -136,4 +140,3 @@ C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Debug\net8.0\refint\vestshed.dll
 C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Debug\net8.0\vestshed.pdb
 C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Debug\net8.0\vestshed.genruntimeconfig.cache
 C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Debug\net8.0\ref\vestshed.dll
-C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

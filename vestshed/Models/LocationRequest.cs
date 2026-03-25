@@ -9,9 +9,10 @@ namespace vestshed.Models
         public int? ServiceProviderId { get; set; }
         public string? LocationName { get; set; }
         public string? Manager { get; set; }
+        public int? ManagerId { get; set; }
         public string? Address { get; set; }
-        public int? CityId { get; set; }
-        public int? StateId { get; set; }
+        public string? CityId { get; set; }
+        public string? StateId { get; set; }
         public string? ZipCode { get; set; }
         public string? Phone { get; set; }
         public string? WMail { get; set; }
@@ -28,6 +29,7 @@ namespace vestshed.Models
         public object? Data { get; set; }
     }
 }
+
 
 
 

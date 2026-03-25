@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using vestshed.Data;
 using vestshed.Models;
@@ -6,6 +7,7 @@ namespace vestshed.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [AllowAnonymous]
     public class ProviderOnboardingController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -72,13 +74,13 @@ namespace vestshed.Controllers
                 }
 
                 // Call stored procedure through DbContext
-                _logger.LogInformation("Attempting to insert provider onboarding data for Id: {Id}, Email: {Email}", request.Id, request.Email);
+                _logger.LogInformation("Attempting to insert provider onboarding data for Email: {Email}", request.Email);
                 
                 var providerId = await _context.InsertProviderOnboardingTempAsync(request);
 
                 if (string.IsNullOrEmpty(providerId))
                 {
-                    _logger.LogWarning("Stored procedure executed but no ProviderId was returned for Id: {Id}", request.Id);
+                    _logger.LogWarning("Stored procedure executed but no ProviderId was returned");
                     return StatusCode(500, new ProviderOnboardingTempResponse
                     {
                         Success = false,
@@ -148,11 +150,11 @@ namespace vestshed.Controllers
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, "Error inserting provider onboarding data for request: {RequestId}", request.Id);
+                        _logger.LogError(ex, "Error inserting provider onboarding data for request with Email: {Email}", request.Email);
                         responses.Add(new ProviderOnboardingTempResponse
                         {
                             Success = false,
-                            Message = $"Error inserting record with Id {request.Id}: {ex.Message}"
+                            Message = $"Error inserting record with Email {request.Email}: {ex.Message}"
                         });
                     }
                 }

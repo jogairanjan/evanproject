@@ -2,7 +2,6 @@ namespace vestshed.Models
 {
     public class ProviderOnboardingTempRequest
     {
-        public int Id { get; set; }
         public int CurrentStep { get; set; }
         public int ProgressPercentage { get; set; }
         public string Status { get; set; } = string.Empty;
@@ -42,6 +41,7 @@ namespace vestshed.Models
         public string Message { get; set; } = string.Empty;
     }
 }
+
 
 
 

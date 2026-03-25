@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using vestshed.Models;
 using System.Data;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.Collections.Generic;
 
 namespace vestshed.Data
 {
@@ -27,22 +28,12 @@ namespace vestshed.Data
             using var connection = new SqlConnection(connectionString);
             await connection.OpenAsync();
 
-            bool identityInsertEnabled = false;
-
             try
             {
-                // Enable IDENTITY_INSERT if Id is being provided (for identity columns)
-                if (request.Id != 0)
-                {
-                    using var identityCommand = new SqlCommand("SET IDENTITY_INSERT ProviderOnboardingtemp ON", connection);
-                    await identityCommand.ExecuteNonQueryAsync();
-                    identityInsertEnabled = true;
-                }
-
                 using var command = new SqlCommand("sp_InsertProviderOnboardingTemp", connection);
                 command.CommandType = CommandType.StoredProcedure;
 
-                // Add parameters
+                // Add parameters (no Id parameter since it's identity)
                 command.Parameters.Add(new SqlParameter("@CurrentStep", SqlDbType.Int) { Value = request.CurrentStep });
                 command.Parameters.Add(new SqlParameter("@ProgressPercentage", SqlDbType.Int) { Value = request.ProgressPercentage });
                 command.Parameters.Add(new SqlParameter("@Status", SqlDbType.VarChar, 50) { Value = (object?)request.Status ?? DBNull.Value });
@@ -122,29 +113,9 @@ namespace vestshed.Data
                     }
                 }
 
-                // If no ProviderId was returned, try to verify the insert by querying the table
                 if (string.IsNullOrEmpty(providerId))
                 {
-                    if (!reader.IsClosed)
-                    {
-                        reader.Close();
-                    }
-
-                    using var verifyCommand = (SqlCommand)connection.CreateCommand();
-                    verifyCommand.CommandText = "SELECT TOP 1 ProviderId FROM ProviderOnboardingtemp WHERE Id = @Id ORDER BY Id DESC";
-                    verifyCommand.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = request.Id });
-
-                    using var verifyReader = await verifyCommand.ExecuteReaderAsync();
-                    if (await verifyReader.ReadAsync())
-                    {
-                        var providerIdIndex = verifyReader.GetOrdinal("ProviderId");
-                        providerId = verifyReader.IsDBNull(providerIdIndex) ? string.Empty : verifyReader.GetString(providerIdIndex);
-                    }
-                }
-
-                if (string.IsNullOrEmpty(providerId))
-                {
-                    throw new InvalidOperationException("Stored procedure executed but no ProviderId was returned and record was not found in table. The insertion may have failed.");
+                    throw new InvalidOperationException("Stored procedure executed but no ProviderId was returned. The insertion may have failed.");
                 }
 
                 return providerId;
@@ -156,23 +127,6 @@ namespace vestshed.Data
             catch (Exception ex)
             {
                 throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex);
-            }
-            finally
-            {
-                // Always disable IDENTITY_INSERT if it was enabled, even if an error occurred
-                if (identityInsertEnabled)
-                {
-                    try
-                    {
-                        using var identityCommand = new SqlCommand("SET IDENTITY_INSERT ProviderOnboardingtemp OFF", connection);
-                        await identityCommand.ExecuteNonQueryAsync();
-                    }
-                    catch
-                    {
-                        // Ignore errors when disabling IDENTITY_INSERT in finally block
-                    }
-                }
-                // No need for another finally: connection is disposed automatically by 'using var connection'
             }
         }
 
@@ -339,14 +293,21 @@ namespace vestshed.Data
                 command.CommandType = CommandType.StoredProcedure;
 
                 // Action parameter (required)
-                command.Parameters.Add(new SqlParameter("@Action", SqlDbType.NVarChar, 20) { Value = action });
+                command.Parameters.Add(new SqlParameter("@Action", SqlDbType.NVarChar, 50) { Value = action });
 
                 // Id parameter (for UPDATE, DELETE, GETBYID)
                 command.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = request.Id ?? (object)DBNull.Value });
 
                 // Add all other parameters
                 AddOptionalParameter(command, "@EmployeeCode", SqlDbType.NVarChar, request.EmployeeCode, 20);
-                AddOptionalParameter(command, "@Serviceproviderid", SqlDbType.NVarChar, request.Serviceproviderid, 20);
+                
+                // Handle Serviceproviderid - convert object to string
+                string? serviceProviderIdString = null;
+                if (request.Serviceproviderid != null)
+                {
+                    serviceProviderIdString = request.Serviceproviderid.ToString();
+                }
+                AddOptionalParameter(command, "@Serviceproviderid", SqlDbType.NVarChar, serviceProviderIdString, 20);
                 AddOptionalParameter(command, "@FirstName", SqlDbType.NVarChar, request.FirstName, 100);
                 AddOptionalParameter(command, "@LastName", SqlDbType.NVarChar, request.LastName, 100);
                 AddOptionalParameter(command, "@FullName", SqlDbType.NVarChar, request.FullName, 200);
@@ -450,7 +411,7 @@ namespace vestshed.Data
                     }
                     return null;
                 }
-                else if (action == "GETALL")
+                else if (action == "GETALL" || action == "GETBYSERVICEPROVIDERID")
                 {
                     var employees = new List<Dictionary<string, object?>>();
                     while (await reader.ReadAsync())
@@ -464,6 +425,166 @@ namespace vestshed.Data
                         employees.Add(employee);
                     }
                     return employees;
+                }
+
+                return null;
+            }
+            catch (SqlException sqlEx)
+            {
+                throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex);
+            }
+            finally
+            {
+                // Connection will be disposed automatically by using statement
+            }
+        }
+
+        public async Task<object> ServicesCRUDAsync(string action, ServiceRequest request)
+        {
+            // Get connection string from the existing connection
+            var existingConnection = Database.GetDbConnection();
+            var connectionString = existingConnection.ConnectionString;
+            
+            // Create a completely NEW independent connection
+            using var connection = new SqlConnection(connectionString);
+            await connection.OpenAsync();
+
+            try
+            {
+                using var command = new SqlCommand("sp_Services_CRUD", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Action parameter (required)
+                command.Parameters.Add(new SqlParameter("@Action", SqlDbType.NVarChar, 50) { Value = action });
+
+                // Id parameter (for UPDATE, DELETE, GETBYID)
+                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = request.Id > 0 ? request.Id : (object)DBNull.Value });
+
+                // Add all other parameters
+                AddOptionalParameter(command, "@ServiceProviderId", SqlDbType.Int, request.ServiceProviderId);
+                AddOptionalParameter(command, "@ServiceName", SqlDbType.NVarChar, request.ServiceName, 200);
+                AddOptionalParameter(command, "@Description", SqlDbType.NVarChar, request.Description, -1);
+                AddOptionalParameter(command, "@Pricing", SqlDbType.Decimal, request.Pricing, null, 10, 2);
+                AddOptionalParameter(command, "@StartTime", SqlDbType.Time, request.StartTime != null && TimeSpan.TryParse(request.StartTime, out var startTs) ? startTs : (object?)null);
+                AddOptionalParameter(command, "@EndTime", SqlDbType.Time, request.EndTime != null && TimeSpan.TryParse(request.EndTime, out var endTs) ? endTs : (object?)null);
+
+                // Handle SubServices XML
+                if (request.SubServices != null && request.SubServices.Count > 0)
+                {
+                    var subServicesXml = $"<SubServices>{string.Join("", request.SubServices.Select(s =>
+                        $"<SubService><SubServiceName>{System.Net.WebUtility.HtmlEncode(s.SubServiceName)}</SubServiceName>" +
+                        $"<Price>{s.Price}</Price>" +
+                        $"<Name>{System.Net.WebUtility.HtmlEncode(s.Name)}</Name>" +
+                        $"<Offered>{(s.Offered ? 1 : 0)}</Offered></SubService>"))}</SubServices>";
+                    command.Parameters.Add(new SqlParameter("@SubServices", SqlDbType.NVarChar, -1) { Value = subServicesXml });
+                }
+                else
+                {
+                    command.Parameters.Add(new SqlParameter("@SubServices", SqlDbType.NVarChar, -1) { Value = DBNull.Value });
+                }
+
+                // Handle Assignments XML
+                if (request.Assignments != null && request.Assignments.Count > 0)
+                {
+                    var assignmentsXml = $"<Assignments>{string.Join("", request.Assignments.Select(a =>
+                        $"<Item><EmployeeId>{a.EmployeeId}</EmployeeId>" +
+                        $"<LocationId>{a.LocationId}</LocationId></Item>"))}</Assignments>";
+                    command.Parameters.Add(new SqlParameter("@Assignments", SqlDbType.NVarChar, -1) { Value = assignmentsXml });
+                }
+                else
+                {
+                    command.Parameters.Add(new SqlParameter("@Assignments", SqlDbType.NVarChar, -1) { Value = DBNull.Value });
+                }
+
+                // Execute the stored procedure
+                using var reader = await command.ExecuteReaderAsync();
+                
+                // Handle different return types based on action
+                if (action == "INSERT")
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        var serviceIdIndex = reader.GetOrdinal("ServiceId");
+                        var serviceId = reader.IsDBNull(serviceIdIndex) ? (int?)null : Convert.ToInt32(reader.GetValue(serviceIdIndex));
+                        return serviceId ?? 0;
+                    }
+                    return 0;
+                }
+                else if (action == "UPDATE" || action == "DELETE")
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        var messageIndex = reader.GetOrdinal("Message");
+                        return reader.IsDBNull(messageIndex) ? string.Empty : reader.GetString(messageIndex);
+                    }
+                    return action == "UPDATE" ? "Updated Successfully" : "Deleted Successfully";
+                }
+                else if (action == "GETBYID")
+                {
+                    var result = new Dictionary<string, object?>();
+                    
+                    // Read Services table
+                    if (await reader.ReadAsync())
+                    {
+                        var service = new Dictionary<string, object?>();
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            var fieldName = reader.GetName(i);
+                            service[fieldName] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                        }
+                        result["Service"] = service;
+                    }
+                    
+                    // Read SubServices table
+                    await reader.NextResultAsync();
+                    var subServices = new List<Dictionary<string, object?>>();
+                    while (await reader.ReadAsync())
+                    {
+                        var subService = new Dictionary<string, object?>();
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            var fieldName = reader.GetName(i);
+                            subService[fieldName] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                        }
+                        subServices.Add(subService);
+                    }
+                    result["SubServices"] = subServices;
+                    
+                    // Read ServiceAssignments table
+                    await reader.NextResultAsync();
+                    var assignments = new List<Dictionary<string, object?>>();
+                    while (await reader.ReadAsync())
+                    {
+                        var assignment = new Dictionary<string, object?>();
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            var fieldName = reader.GetName(i);
+                            assignment[fieldName] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                        }
+                        assignments.Add(assignment);
+                    }
+                    result["Assignments"] = assignments;
+                    
+                    return result;
+                }
+                else if (action == "GETALL" || action == "GETBYSERVICEPROVIDERID")
+                {
+                    var services = new List<Dictionary<string, object?>>();
+                    while (await reader.ReadAsync())
+                    {
+                        var service = new Dictionary<string, object?>();
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            var fieldName = reader.GetName(i);
+                            service[fieldName] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                        }
+                        services.Add(service);
+                    }
+                    return services;
                 }
 
                 return null;
@@ -1147,7 +1268,7 @@ namespace vestshed.Data
                 command.CommandType = CommandType.StoredProcedure;
 
                 // Action parameter (required)
-                command.Parameters.Add(new SqlParameter("@Action", SqlDbType.NVarChar, 20) { Value = action });
+                command.Parameters.Add(new SqlParameter("@Action", SqlDbType.NVarChar, 50) { Value = action });
 
                 // Id parameter (for UPDATE, DELETE, GETBYID)
                 command.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = request.Id ?? (object)DBNull.Value });
@@ -1156,15 +1277,16 @@ namespace vestshed.Data
                 AddOptionalParameter(command, "@ServiceProviderId", SqlDbType.Int, request.ServiceProviderId);
                 AddOptionalParameter(command, "@LocationName", SqlDbType.NVarChar, request.LocationName, 200);
                 AddOptionalParameter(command, "@Manager", SqlDbType.NVarChar, request.Manager, 200);
+                AddOptionalParameter(command, "@ManagerId", SqlDbType.Int, request.ManagerId);
                 AddOptionalParameter(command, "@Address", SqlDbType.NVarChar, request.Address, 500);
-                AddOptionalParameter(command, "@CityId", SqlDbType.Int, request.CityId);
-                AddOptionalParameter(command, "@StateId", SqlDbType.Int, request.StateId);
+                AddOptionalParameter(command, "@CityId", SqlDbType.NVarChar, request.CityId, 200);
+                AddOptionalParameter(command, "@StateId", SqlDbType.NVarChar, request.StateId, 200);
                 AddOptionalParameter(command, "@ZipCode", SqlDbType.NVarChar, request.ZipCode, 20);
                 AddOptionalParameter(command, "@Phone", SqlDbType.NVarChar, request.Phone, 20);
                 AddOptionalParameter(command, "@WMail", SqlDbType.NVarChar, request.WMail, 256);
                 AddOptionalParameter(command, "@Status", SqlDbType.NVarChar, request.Status, 50);
-                AddOptionalParameter(command, "@AssignedServices", SqlDbType.NVarChar, request.AssignedServices, -1);
-                AddOptionalParameter(command, "@AssignedEmployees", SqlDbType.NVarChar, request.AssignedEmployees, -1);
+                AddOptionalParameter(command, "@AssignedServices", SqlDbType.NVarChar, string.IsNullOrEmpty(request.AssignedServices) ? null : request.AssignedServices, -1);
+                AddOptionalParameter(command, "@AssignedEmployees", SqlDbType.NVarChar, string.IsNullOrEmpty(request.AssignedEmployees) ? null : request.AssignedEmployees, -1);
 
                 // Execute the stored procedure
                 using var reader = await command.ExecuteReaderAsync();
@@ -1175,7 +1297,7 @@ namespace vestshed.Data
                     if (await reader.ReadAsync())
                     {
                         var newLocationIdIndex = reader.GetOrdinal("NewLocationId");
-                        var newLocationId = reader.IsDBNull(newLocationIdIndex) ? (int?)null : reader.GetInt32(newLocationIdIndex);
+                        var newLocationId = reader.IsDBNull(newLocationIdIndex) ? (int?)null : Convert.ToInt32(reader.GetValue(newLocationIdIndex));
                         return newLocationId ?? 0;
                     }
                     return 0;
@@ -1203,7 +1325,7 @@ namespace vestshed.Data
                     }
                     return null;
                 }
-                else if (action == "GETALL")
+                else if (action == "GETALL" || action == "GETBYSERVICEPROVIDERID")
                 {
                     var locations = new List<Dictionary<string, object?>>();
                     while (await reader.ReadAsync())
@@ -1299,6 +1421,44 @@ namespace vestshed.Data
             finally
             {
                 // Connection will be disposed automatically by using statement
+            }
+        }
+
+        public async Task<object> GetPetParentsByServiceProviderIdAsync(int serviceProviderId)
+        {
+            var existingConnection = Database.GetDbConnection();
+            var connectionString = existingConnection.ConnectionString;
+            using var connection = new SqlConnection(connectionString);
+            await connection.OpenAsync();
+
+            try
+            {
+                using var command = new SqlCommand("sp_PetParents_Get", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = DBNull.Value });
+                command.Parameters.Add(new SqlParameter("@ServiceProviderId", SqlDbType.Int) { Value = serviceProviderId });
+
+                using var reader = await command.ExecuteReaderAsync();
+                var petParents = new List<Dictionary<string, object?>>();
+                while (await reader.ReadAsync())
+                {
+                    var petParent = new Dictionary<string, object?>();
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        var fieldName = reader.GetName(i);
+                        petParent[fieldName] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                    }
+                    petParents.Add(petParent);
+                }
+                return petParents;
+            }
+            catch (SqlException sqlEx)
+            {
+                throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex);
             }
         }
 
@@ -1418,6 +1578,184 @@ namespace vestshed.Data
             catch (Exception ex)
             {
                 throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex);
+            }
+            finally
+            {
+                // Connection will be disposed automatically by using statement
+            }
+        }
+
+        public async Task<ProviderLoginResponse?> ProviderLoginAsync(string email, string password)
+        {
+            // Get connection string from the existing connection
+            var existingConnection = Database.GetDbConnection();
+            var connectionString = existingConnection.ConnectionString;
+
+            // Create a completely NEW independent connection
+            using var connection = new SqlConnection(connectionString);
+            await connection.OpenAsync();
+
+            try
+            {
+                // Encode the password using Base64 (as the database stores Base64 encoded passwords)
+                string passwordHash = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(password));
+
+                using var command = new SqlCommand("sp_Provider_Login", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Required parameters
+                command.Parameters.Add(new SqlParameter("@Email", SqlDbType.NVarChar, 256) { Value = email ?? (object)DBNull.Value });
+                command.Parameters.Add(new SqlParameter("@PasswordHash", SqlDbType.NVarChar, -1) { Value = passwordHash ?? (object)DBNull.Value });
+
+                // Execute the stored procedure
+                using var reader = await command.ExecuteReaderAsync();
+
+                // Check if a record was returned (successful login)
+                if (await reader.ReadAsync())
+                {
+                    // Login successful - return provider data
+                    var provider = new ProviderLoginResponse();
+                    
+                    // Get Id (column name is "Id")
+                    try
+                    {
+                        var idIndex = reader.GetOrdinal("Id");
+                        provider.Id = reader.GetInt32(idIndex);
+                    }
+                    catch { }
+
+                    // Get Email (column name is "Email")
+                    try
+                    {
+                        var emailIndex = reader.GetOrdinal("Email");
+                        provider.Email = reader.GetString(emailIndex);
+                    }
+                    catch { }
+
+                    // Get Status (column name is "Status", not "AccountStatus")
+                    try
+                    {
+                        var statusIndex = reader.GetOrdinal("Status");
+                        provider.AccountStatus = reader.GetString(statusIndex);
+                    }
+                    catch { }
+
+                    return provider;
+                }
+
+                // No record returned - login failed
+                return null;
+            }
+            catch (SqlException sqlEx)
+            {
+                // Check if this is the "Invalid email or password" error from the stored procedure
+                if (sqlEx.Message.Contains("Invalid email or password"))
+                {
+                    // Return null to indicate login failed (not an exception)
+                    return null;
+                }
+                throw new InvalidOperationException($"Database error calling sp_Provider_Login: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error executing stored procedure sp_Provider_Login: {ex.Message}", ex);
+            }
+            finally
+            {
+                // Connection will be disposed automatically by using statement
+            }
+        }
+
+        public async Task<object?> ProviderLoginStoredProcedureAsync(string email, string passwordHash)
+        {
+            // Get connection string from the existing connection
+            var existingConnection = Database.GetDbConnection();
+            var connectionString = existingConnection.ConnectionString;
+
+            // Create a completely NEW independent connection
+            using var connection = new SqlConnection(connectionString);
+            await connection.OpenAsync();
+
+            try
+            {
+                using var command = new SqlCommand("sp_Provider_Login", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Required parameters
+                command.Parameters.Add(new SqlParameter("@Email", SqlDbType.NVarChar, 256) { Value = email ?? (object)DBNull.Value });
+                command.Parameters.Add(new SqlParameter("@PasswordHash", SqlDbType.NVarChar, 500) { Value = passwordHash ?? (object)DBNull.Value });
+
+                // Execute the stored procedure
+                using var reader = await command.ExecuteReaderAsync();
+
+                // Check if a record was returned (successful login)
+                if (await reader.ReadAsync())
+                {
+                    // Check the LoginSource to determine the response type
+                    var loginSource = reader.GetOrdinal("LoginSource");
+                    var source = reader.IsDBNull(loginSource) ? "" : reader.GetString(loginSource);
+
+                    if (source == "FINAL")
+                    {
+                        // Return FINAL table data
+                        var provider = new ProviderLoginFinalResponse
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            ProviderId = reader.IsDBNull(reader.GetOrdinal("ProviderId")) ? null : reader.GetInt32(reader.GetOrdinal("ProviderId")),
+                            Email = reader.GetString(reader.GetOrdinal("Email")),
+                            BusinessName = reader.GetString(reader.GetOrdinal("BusinessName")),
+                            OwnerName = reader.GetString(reader.GetOrdinal("OwnerName")),
+                            Status = reader.GetString(reader.GetOrdinal("Status")),
+                            IsApproved = reader.GetBoolean(reader.GetOrdinal("IsApproved")),
+                            IsLive = reader.GetBoolean(reader.GetOrdinal("IsLive")),
+                            UserId = reader.IsDBNull(reader.GetOrdinal("UserId")) ? null : reader.GetInt32(reader.GetOrdinal("UserId")),
+                            LoginSource = "FINAL"
+                        };
+                        return provider;
+                    }
+                    else if (source == "TEMP")
+                    {
+                        // Return TEMP table data
+                        var provider = new ProviderLoginTempResponse
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            ProviderId = reader.IsDBNull(reader.GetOrdinal("ProviderId")) ? null : reader.GetInt32(reader.GetOrdinal("ProviderId")),
+                            Email = reader.GetString(reader.GetOrdinal("Email")),
+                            BusinessName = reader.GetString(reader.GetOrdinal("BusinessName")),
+                            OwnerName = reader.GetString(reader.GetOrdinal("OwnerName")),
+                            Status = reader.GetString(reader.GetOrdinal("Status")),
+                            CurrentStep = reader.IsDBNull(reader.GetOrdinal("CurrentStep")) ? null : reader.GetInt32(reader.GetOrdinal("CurrentStep")),
+                            ProgressPercentage = reader.IsDBNull(reader.GetOrdinal("ProgressPercentage")) ? null : reader.GetInt32(reader.GetOrdinal("ProgressPercentage")),
+                            LoginSource = "TEMP"
+                        };
+                        return provider;
+                    }
+                }
+
+                // No record returned - login failed, return error response
+                return new ProviderLoginErrorResponse
+                {
+                    Success = false,
+                    Message = "Invalid email or password."
+                };
+            }
+            catch (SqlException sqlEx)
+            {
+                // Return error response on SQL exception
+                return new ProviderLoginErrorResponse
+                {
+                    Success = false,
+                    Message = "Invalid email or password."
+                };
+            }
+            catch (Exception ex)
+            {
+                // Return error response on general exception
+                return new ProviderLoginErrorResponse
+                {
+                    Success = false,
+                    Message = "Invalid email or password."
+                };
             }
             finally
             {

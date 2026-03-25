@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using vestshed.Data;
 using vestshed.Models;
+using vestshed.Services;
 
 namespace vestshed.Controllers
 {
@@ -10,11 +12,13 @@ namespace vestshed.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<PetParentsController> _logger;
+        private readonly IAuthService _authService;
 
-        public PetParentsController(ApplicationDbContext context, ILogger<PetParentsController> logger)
+        public PetParentsController(ApplicationDbContext context, ILogger<PetParentsController> logger, IAuthService authService)
         {
             _context = context;
             _logger = logger;
+            _authService = authService;
         }
 
         /// <summary>
@@ -106,6 +110,7 @@ namespace vestshed.Controllers
         /// <param name="id">Pet parent ID</param>
         /// <returns>Pet parent data</returns>
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<PetParentResponse>> GetPetParentById(int id)
         {
             try
@@ -151,10 +156,51 @@ namespace vestshed.Controllers
         }
 
         /// <summary>
+        /// Get pet parents by Service Provider ID
+        /// </summary>
+        [HttpGet("by-service-provider/{serviceProviderId}")]
+        [Authorize]
+        public async Task<ActionResult<PetParentResponse>> GetPetParentsByServiceProviderId(int serviceProviderId)
+        {
+            try
+            {
+                if (serviceProviderId <= 0)
+                {
+                    return BadRequest(new PetParentResponse
+                    {
+                        Success = false,
+                        Message = "Invalid service provider ID"
+                    });
+                }
+
+                _logger.LogInformation("Retrieving pet parents for service provider ID: {ServiceProviderId}", serviceProviderId);
+
+                var result = await _context.GetPetParentsByServiceProviderIdAsync(serviceProviderId);
+
+                return Ok(new PetParentResponse
+                {
+                    Success = true,
+                    Message = "Pet parents retrieved successfully",
+                    Data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving pet parents for service provider ID: {ServiceProviderId}", serviceProviderId);
+                return StatusCode(500, new PetParentResponse
+                {
+                    Success = false,
+                    Message = $"An error occurred: {ex.Message}"
+                });
+            }
+        }
+
+        /// <summary>
         /// Get all pet parents
         /// </summary>
         /// <returns>List of all pet parents</returns>
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<PetParentResponse>> GetAllPetParents()
         {
             try
@@ -226,11 +272,16 @@ namespace vestshed.Controllers
                 if (result != null)
                 {
                     _logger.LogInformation("Login successful for email: {Email}", request.Email);
+                    var token = _authService.GenerateJwtToken(result, request.Email, "PetParent");
+                    var expiration = DateTime.UtcNow.AddHours(24);
                     return Ok(new PetParentResponse
                     {
                         Success = true,
                         Message = "Login successful",
-                        Data = result
+                        Data = result,
+                        Token = token,
+                        Authorization = $"Bearer {token}",
+                        Expiration = expiration
                     });
                 }
 

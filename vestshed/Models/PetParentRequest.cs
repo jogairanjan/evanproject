@@ -26,6 +26,9 @@ namespace vestshed.Models
         public string Message { get; set; } = string.Empty;
         public int? NewPetParentId { get; set; }
         public object? Data { get; set; }
+        public string? Token { get; set; }
+        public string? Authorization { get; set; }
+        public DateTime? Expiration { get; set; }
     }
 
     public class PetParentLoginRequest
