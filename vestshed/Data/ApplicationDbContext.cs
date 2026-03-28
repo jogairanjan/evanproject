@@ -1424,6 +1424,350 @@ namespace vestshed.Data
             }
         }
 
+        public async Task<string> BookAppointmentAsync(AppointmentRequest request)
+        {
+            var existingConnection = Database.GetDbConnection();
+            using var connection = new SqlConnection(existingConnection.ConnectionString);
+            await connection.OpenAsync();
+
+            try
+            {
+                // Build XML for pets
+                var petsXml = "<Pets>" + string.Join("", request.PetIds.Select(id => $"<Pet><PetId>{id}</PetId></Pet>")) + "</Pets>";
+
+                using var command = new SqlCommand("sp_BookAppointment", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@ServiceProviderId", SqlDbType.Int) { Value = request.ServiceProviderId.HasValue ? request.ServiceProviderId.Value : (object)DBNull.Value });
+                command.Parameters.Add(new SqlParameter("@PetParentId", SqlDbType.Int) { Value = request.PetParentId });
+                command.Parameters.Add(new SqlParameter("@ServiceId", SqlDbType.Int) { Value = request.ServiceId });
+                command.Parameters.Add(new SqlParameter("@AppointmentDate", SqlDbType.Date) { Value = DateOnly.Parse(request.AppointmentDate) });
+                command.Parameters.Add(new SqlParameter("@BookingTime", SqlDbType.Time) { Value = TimeSpan.Parse(request.BookingTime) });
+                command.Parameters.Add(new SqlParameter("@Pets", SqlDbType.Xml) { Value = petsXml });
+
+                using var reader = await command.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
+                    return reader.IsDBNull(0) ? "Appointment booked successfully" : reader.GetString(0);
+
+                return "Appointment booked successfully";
+            }
+            catch (SqlException sqlEx)
+            {
+                throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex);
+            }
+        }
+
+        // ─── PET MEDICAL HELPERS ────────────────────────────────────────────
+
+        public async Task<object> PetMedicalSnapshotCRUDAsync(string action, PetMedicalSnapshotRequest req)
+        {
+            var conn = Database.GetDbConnection();
+            using var connection = new SqlConnection(conn.ConnectionString);
+            await connection.OpenAsync();
+            try
+            {
+                using var cmd = new SqlCommand("sp_PetMedicalSnapshot_CRUD", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@Action", SqlDbType.NVarChar, 20) { Value = action });
+                AddOptionalParameter(cmd, "@Id", SqlDbType.Int, req.Id);
+                AddOptionalParameter(cmd, "@ServiceProviderId", SqlDbType.Int, req.ServiceProviderId);
+                AddOptionalParameter(cmd, "@PetId", SqlDbType.Int, req.PetId);
+                AddOptionalParameter(cmd, "@Species", SqlDbType.NVarChar, req.Species, 100);
+                AddOptionalParameter(cmd, "@Breed", SqlDbType.NVarChar, req.Breed, 100);
+                AddOptionalParameter(cmd, "@DateOfBirth", SqlDbType.Date, req.DateOfBirth != null ? DateOnly.Parse(req.DateOfBirth) : (object?)null);
+                AddOptionalParameter(cmd, "@Sex", SqlDbType.NVarChar, req.Sex, 20);
+                AddOptionalParameter(cmd, "@Microchipped", SqlDbType.Bit, req.Microchipped);
+                AddOptionalParameter(cmd, "@SpayedNeutered", SqlDbType.Bit, req.SpayedNeutered);
+                AddOptionalParameter(cmd, "@Allergies", SqlDbType.NVarChar, req.Allergies, -1);
+                AddOptionalParameter(cmd, "@ChronicConditions", SqlDbType.NVarChar, req.ChronicConditions, -1);
+                AddOptionalParameter(cmd, "@PreferredPharmacy", SqlDbType.NVarChar, req.PreferredPharmacy, 200);
+                return await ReadPetMedicalResultAsync(cmd, action);
+            }
+            catch (SqlException sqlEx) { throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx); }
+            catch (Exception ex) { throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex); }
+        }
+
+        public async Task<object> PetMedicationsCRUDAsync(string action, PetMedicationRequest req)
+        {
+            var conn = Database.GetDbConnection();
+            using var connection = new SqlConnection(conn.ConnectionString);
+            await connection.OpenAsync();
+            try
+            {
+                using var cmd = new SqlCommand("sp_PetMedications_CRUD", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@Action", SqlDbType.NVarChar, 20) { Value = action });
+                AddOptionalParameter(cmd, "@Id", SqlDbType.Int, req.Id);
+                AddOptionalParameter(cmd, "@ServiceProviderId", SqlDbType.Int, req.ServiceProviderId);
+                AddOptionalParameter(cmd, "@PetId", SqlDbType.Int, req.PetId);
+                AddOptionalParameter(cmd, "@MedicationName", SqlDbType.NVarChar, req.MedicationName, 200);
+                AddOptionalParameter(cmd, "@Dose", SqlDbType.NVarChar, req.Dose, 100);
+                AddOptionalParameter(cmd, "@Frequency", SqlDbType.NVarChar, req.Frequency, 100);
+                AddOptionalParameter(cmd, "@PrescribedBy", SqlDbType.NVarChar, req.PrescribedBy, 200);
+                AddOptionalParameter(cmd, "@StartDate", SqlDbType.Date, req.StartDate != null ? DateOnly.Parse(req.StartDate) : (object?)null);
+                AddOptionalParameter(cmd, "@RefillStatus", SqlDbType.NVarChar, req.RefillStatus, 50);
+                return await ReadPetMedicalResultAsync(cmd, action);
+            }
+            catch (SqlException sqlEx) { throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx); }
+            catch (Exception ex) { throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex); }
+        }
+
+        public async Task<object> PetDiagnosticsCRUDAsync(int? serviceProviderId, int? petId)
+        {
+            var conn = Database.GetDbConnection();
+            using var connection = new SqlConnection(conn.ConnectionString);
+            await connection.OpenAsync();
+            try
+            {
+                using var cmd = new SqlCommand("sp_PetDiagnostics_CRUD", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@Action", SqlDbType.NVarChar, 20) { Value = "GETALL" });
+                AddOptionalParameter(cmd, "@ServiceProviderId", SqlDbType.Int, serviceProviderId);
+                AddOptionalParameter(cmd, "@PetId", SqlDbType.Int, petId);
+                return await ReadPetMedicalResultAsync(cmd, "GETALL");
+            }
+            catch (SqlException sqlEx) { throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx); }
+            catch (Exception ex) { throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex); }
+        }
+
+        public async Task<object> PetDocumentsCRUDAsync(int? serviceProviderId, int? petId)
+        {
+            var conn = Database.GetDbConnection();
+            using var connection = new SqlConnection(conn.ConnectionString);
+            await connection.OpenAsync();
+            try
+            {
+                using var cmd = new SqlCommand("sp_PetDocuments_CRUD", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@Action", SqlDbType.NVarChar, 20) { Value = "GETALL" });
+                AddOptionalParameter(cmd, "@ServiceProviderId", SqlDbType.Int, serviceProviderId);
+                AddOptionalParameter(cmd, "@PetId", SqlDbType.Int, petId);
+                return await ReadPetMedicalResultAsync(cmd, "GETALL");
+            }
+            catch (SqlException sqlEx) { throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx); }
+            catch (Exception ex) { throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex); }
+        }
+
+        public async Task<object> PetClinicalSummaryCRUDAsync(int? serviceProviderId, int? petId)
+        {
+            var conn = Database.GetDbConnection();
+            using var connection = new SqlConnection(conn.ConnectionString);
+            await connection.OpenAsync();
+            try
+            {
+                using var cmd = new SqlCommand("sp_PetClinicalSummary_CRUD", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@Action", SqlDbType.NVarChar, 20) { Value = "GETALL" });
+                AddOptionalParameter(cmd, "@ServiceProviderId", SqlDbType.Int, serviceProviderId);
+                AddOptionalParameter(cmd, "@PetId", SqlDbType.Int, petId);
+                return await ReadPetMedicalResultAsync(cmd, "GETALL");
+            }
+            catch (SqlException sqlEx) { throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx); }
+            catch (Exception ex) { throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex); }
+        }
+
+        public async Task<object> PetRemindersCRUDAsync(int? serviceProviderId, int? petId)
+        {
+            var conn = Database.GetDbConnection();
+            using var connection = new SqlConnection(conn.ConnectionString);
+            await connection.OpenAsync();
+            try
+            {
+                using var cmd = new SqlCommand("sp_PetReminders_CRUD", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@Action", SqlDbType.NVarChar, 20) { Value = "GETALL" });
+                AddOptionalParameter(cmd, "@ServiceProviderId", SqlDbType.Int, serviceProviderId);
+                AddOptionalParameter(cmd, "@PetId", SqlDbType.Int, petId);
+                return await ReadPetMedicalResultAsync(cmd, "GETALL");
+            }
+            catch (SqlException sqlEx) { throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx); }
+            catch (Exception ex) { throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex); }
+        }
+
+        public async Task<object> PetPermissionsCRUDAsync(string action, PetPermissionRequest req)
+        {
+            var conn = Database.GetDbConnection();
+            using var connection = new SqlConnection(conn.ConnectionString);
+            await connection.OpenAsync();
+            try
+            {
+                using var cmd = new SqlCommand("sp_PetPermissions_CRUD", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@Action", SqlDbType.NVarChar, 20) { Value = action });
+                AddOptionalParameter(cmd, "@Id", SqlDbType.Int, req.Id);
+                AddOptionalParameter(cmd, "@ServiceProviderId", SqlDbType.Int, req.ServiceProviderId);
+                AddOptionalParameter(cmd, "@PetId", SqlDbType.Int, req.PetId);
+                AddOptionalParameter(cmd, "@UserName", SqlDbType.NVarChar, req.UserName, 200);
+                AddOptionalParameter(cmd, "@Role", SqlDbType.NVarChar, req.Role, 100);
+                AddOptionalParameter(cmd, "@AccessLevel", SqlDbType.NVarChar, req.AccessLevel, 50);
+                AddOptionalParameter(cmd, "@IsActive", SqlDbType.Bit, req.IsActive);
+                return await ReadPetMedicalResultAsync(cmd, action);
+            }
+            catch (SqlException sqlEx) { throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx); }
+            catch (Exception ex) { throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex); }
+        }
+
+        public async Task<object> PetVaccinationsCRUDAsync(int? petId)
+        {
+            var conn = Database.GetDbConnection();
+            using var connection = new SqlConnection(conn.ConnectionString);
+            await connection.OpenAsync();
+            try
+            {
+                using var cmd = new SqlCommand("sp_PetVaccinations_CRUD", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@Action", SqlDbType.NVarChar, 20) { Value = "GETALL" });
+                AddOptionalParameter(cmd, "@ServiceProviderId", SqlDbType.Int, (object?)null);
+                AddOptionalParameter(cmd, "@PetId", SqlDbType.Int, petId);
+                return await ReadPetMedicalResultAsync(cmd, "GETALL");
+            }
+            catch (SqlException sqlEx) { throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx); }
+            catch (Exception ex) { throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex); }
+        }
+
+        public async Task<object> GetFullPetDashboardAsync(int serviceProviderId, int petId)
+        {
+            var conn = Database.GetDbConnection();
+            using var connection = new SqlConnection(conn.ConnectionString);
+            await connection.OpenAsync();
+            try
+            {
+                using var cmd = new SqlCommand("sp_GetFullPetDashboard", connection);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@ServiceProviderId", SqlDbType.Int) { Value = serviceProviderId });
+                cmd.Parameters.Add(new SqlParameter("@PetId", SqlDbType.Int) { Value = petId });
+
+                using var reader = await cmd.ExecuteReaderAsync();
+                var dashboard = new Dictionary<string, object?>();
+                string[] keys = { "medicalSnapshot", "medications", "diagnostics", "documents", "reminders", "vaccinations" };
+                int index = 0;
+                do
+                {
+                    var list = new List<Dictionary<string, object?>>();
+                    while (await reader.ReadAsync())
+                    {
+                        var row = new Dictionary<string, object?>();
+                        for (int i = 0; i < reader.FieldCount; i++)
+                            row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                        list.Add(row);
+                    }
+                    if (index < keys.Length) dashboard[keys[index]] = list;
+                    index++;
+                } while (await reader.NextResultAsync());
+
+                return dashboard;
+            }
+            catch (SqlException sqlEx) { throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx); }
+            catch (Exception ex) { throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex); }
+        }
+
+        private async Task<object> ReadPetMedicalResultAsync(SqlCommand cmd, string action)
+        {
+            using var reader = await cmd.ExecuteReaderAsync();
+            if (action == "INSERT")
+            {
+                if (await reader.ReadAsync())
+                    return reader.IsDBNull(0) ? 0 : Convert.ToInt32(reader.GetValue(0));
+                return 0;
+            }
+            else if (action == "DELETE" || action == "UPDATE")
+            {
+                return action == "DELETE" ? "Deleted successfully" : "Updated successfully";
+            }
+            else if (action == "GETBYID")
+            {
+                if (await reader.ReadAsync())
+                {
+                    var row = new Dictionary<string, object?>();
+                    for (int i = 0; i < reader.FieldCount; i++)
+                        row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                    return row;
+                }
+                return null;
+            }
+            else // GETALL
+            {
+                var list = new List<Dictionary<string, object?>>();
+                while (await reader.ReadAsync())
+                {
+                    var row = new Dictionary<string, object?>();
+                    for (int i = 0; i < reader.FieldCount; i++)
+                        row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                    list.Add(row);
+                }
+                return list;
+            }
+        }
+
+        public async Task<object> GetAllServiceProvidersAsync()
+        {
+            var existingConnection = Database.GetDbConnection();
+            using var connection = new SqlConnection(existingConnection.ConnectionString);
+            await connection.OpenAsync();
+
+            try
+            {
+                using var command = new SqlCommand("sp_ServiceProviders_Get", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = DBNull.Value });
+
+                using var reader = await command.ExecuteReaderAsync();
+                var list = new List<Dictionary<string, object?>>();
+                while (await reader.ReadAsync())
+                {
+                    var row = new Dictionary<string, object?>();
+                    for (int i = 0; i < reader.FieldCount; i++)
+                        row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                    list.Add(row);
+                }
+                return list;
+            }
+            catch (SqlException sqlEx)
+            {
+                throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex);
+            }
+        }
+
+        public async Task<object?> GetServiceProviderByIdAsync(int id)
+        {
+            var existingConnection = Database.GetDbConnection();
+            using var connection = new SqlConnection(existingConnection.ConnectionString);
+            await connection.OpenAsync();
+
+            try
+            {
+                using var command = new SqlCommand("sp_ServiceProviders_Get", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int) { Value = id });
+
+                using var reader = await command.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
+                {
+                    var row = new Dictionary<string, object?>();
+                    for (int i = 0; i < reader.FieldCount; i++)
+                        row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                    return row;
+                }
+                return null;
+            }
+            catch (SqlException sqlEx)
+            {
+                throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex);
+            }
+        }
+
         public async Task<object> GetPetParentsByServiceProviderIdAsync(int serviceProviderId)
         {
             var existingConnection = Database.GetDbConnection();

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("vestshed")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+95c5d51ec357deaf4837c06bec83629bb2c47e74")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c06282b86424cdc5dd36da0de3cbee1b36759e9e")]
 [assembly: System.Reflection.AssemblyProductAttribute("vestshed")]
 [assembly: System.Reflection.AssemblyTitleAttribute("vestshed")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
