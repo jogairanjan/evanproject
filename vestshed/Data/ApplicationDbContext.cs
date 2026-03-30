@@ -1461,6 +1461,38 @@ namespace vestshed.Data
             }
         }
 
+        public async Task<object> GetAppointmentsByServiceProviderAsync(int serviceProviderId)
+        {
+            var existingConnection = Database.GetDbConnection();
+            using var connection = new SqlConnection(existingConnection.ConnectionString);
+            await connection.OpenAsync();
+            try
+            {
+                using var command = new SqlCommand("sp_GetAppointmentsByServiceProvider", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@ServiceProviderId", SqlDbType.Int) { Value = serviceProviderId });
+
+                var appointments = new List<Dictionary<string, object?>>();
+                using var reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    var row = new Dictionary<string, object?>();
+                    for (int i = 0; i < reader.FieldCount; i++)
+                        row[reader.GetName(i)] = reader.IsDBNull(i) ? null : reader.GetValue(i);
+                    appointments.Add(row);
+                }
+                return appointments;
+            }
+            catch (SqlException sqlEx)
+            {
+                throw new InvalidOperationException($"Database error: {sqlEx.Message} (Error Number: {sqlEx.Number}, Line: {sqlEx.LineNumber})", sqlEx);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error executing stored procedure: {ex.Message}", ex);
+            }
+        }
+
         // ─── PET MEDICAL HELPERS ────────────────────────────────────────────
 
         public async Task<object> PetMedicalSnapshotCRUDAsync(string action, PetMedicalSnapshotRequest req)

@@ -26,6 +26,32 @@
     ]
   },
   {
+    "ContainingType": "vestshed.Controllers.AppointmentsController",
+    "Method": "GetAppointmentsByServiceProvider",
+    "RelativePath": "api/Appointments/by-service-provider/{serviceProviderId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "serviceProviderId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "vestshed.Models.AppointmentResponse",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "vestshed.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",

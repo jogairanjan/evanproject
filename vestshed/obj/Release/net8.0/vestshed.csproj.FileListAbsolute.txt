@@ -1,3 +1,5 @@
+C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\appsettings - Copy.Development.json
+C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\appsettings - Copy.json
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\appsettings.Development.json
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\appsettings.json
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\vestshed.staticwebassets.endpoints.json
@@ -9,6 +11,7 @@ C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\vestshed.pdb
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\Azure.Core.dll
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\Azure.Identity.dll
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\Humanizer.dll
+C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\Microsoft.CodeAnalysis.dll
 C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\Microsoft.CodeAnalysis.CSharp.dll
@@ -138,6 +141,3 @@ C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Release\net8.0\refint\vestshed.dll
 C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Release\net8.0\vestshed.pdb
 C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Release\net8.0\vestshed.genruntimeconfig.cache
 C:\Users\Ranjan\Desktop\vestshed\vestshed\obj\Release\net8.0\ref\vestshed.dll
-C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\appsettings - Copy.Development.json
-C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\appsettings - Copy.json
-C:\Users\Ranjan\Desktop\vestshed\vestshed\bin\Release\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

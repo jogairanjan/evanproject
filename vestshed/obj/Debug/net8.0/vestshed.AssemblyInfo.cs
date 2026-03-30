@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("vestshed")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c06282b86424cdc5dd36da0de3cbee1b36759e9e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+77b6bcf73bfbefa94fba605fde0a4b05572b9296")]
 [assembly: System.Reflection.AssemblyProductAttribute("vestshed")]
 [assembly: System.Reflection.AssemblyTitleAttribute("vestshed")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

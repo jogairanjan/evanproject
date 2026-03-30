@@ -8,9 +8,7 @@ using vestshed.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-// Configure CORS
+// Configure CORS - Allow All Origins
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -27,16 +25,12 @@ builder.Services.AddControllers();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString)
-           .EnableSensitiveDataLogging() // Enable detailed SQL logging for debugging
-           .LogTo(Console.WriteLine, LogLevel.Information)); // Log SQL queries to console
+           .EnableSensitiveDataLogging()
+           .LogTo(Console.WriteLine, LogLevel.Information));
 
-// Register AuthService
+// Register Services
 builder.Services.AddScoped<IAuthService, AuthService>();
-
-// Register EmployeeService
 builder.Services.AddScoped<EmployeeService>();
-
-// Register ServiceService
 builder.Services.AddScoped<ServiceService>();
 
 // Configure JWT Authentication
@@ -60,11 +54,26 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key),
-        ClockSkew = TimeSpan.Zero // Remove delay of token expiration
+        ClockSkew = TimeSpan.Zero
+    };
+
+    // Handle CORS for JWT Bearer token errors
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = context =>
+        {
+            context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            return Task.CompletedTask;
+        },
+        OnAuthenticationFailed = context =>
+        {
+            context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            return Task.CompletedTask;
+        }
     };
 });
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Configure Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -75,10 +84,9 @@ builder.Services.AddSwaggerGen(c =>
         Description = "VetShed API with JWT Authentication"
     });
 
-    // Add JWT Authentication to Swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below.",
+        Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token.",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
@@ -103,24 +111,49 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-//un comment
-//if (app.Environment.IsDevelopment())
-//{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-//}
+// ===== MIDDLEWARE ORDER IS CRITICAL =====
 
+// 1. Swagger
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "VetShed API v1");
+    c.RoutePrefix = "swagger";
+});
+
+// 2. CORS - Must be first before anything else
+app.UseCors("AllowAll");
+
+// 3. HTTPS Redirection
 app.UseHttpsRedirection();
 
-// Enable static file serving for uploaded images
+// 4. Routing
+app.UseRouting();
+
+// 5. Static Files
 app.UseStaticFiles();
 
-app.UseCors("AllowAll"); // Add CORS middleware
+// 6. Authentication - Before Authorization
+app.UseAuthentication();
 
-app.UseAuthentication(); // Add this before UseAuthorization
+// 7. Authorization
 app.UseAuthorization();
 
+// 8. Map Controllers
 app.MapControllers();
+
+// Auto migrate database on startup
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Database migration error: {ex.Message}");
+    }
+}
 
 app.Run();

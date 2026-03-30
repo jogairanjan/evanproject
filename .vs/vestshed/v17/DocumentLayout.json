@@ -3,16 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\Ranjan\\Desktop\\vestshed\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|c:\\users\\ranjan\\desktop\\vestshed\\vestshed\\services\\serviceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|solutionrelative:vestshed\\services\\serviceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|c:\\users\\ranjan\\desktop\\vestshed\\vestshed\\controllers\\appointmentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|solutionrelative:vestshed\\controllers\\appointmentscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|c:\\users\\ranjan\\desktop\\vestshed\\vestshed\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|solutionrelative:vestshed\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|c:\\users\\ranjan\\desktop\\vestshed\\vestshed\\properties\\publishprofiles\\vetsched-api - web deploy.pubxml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|solutionrelative:vestshed\\properties\\publishprofiles\\vetsched-api - web deploy.pubxml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|c:\\users\\ranjan\\desktop\\vestshed\\vestshed\\properties\\publishprofiles\\vestshed-api.pubxml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|solutionrelative:vestshed\\properties\\publishprofiles\\vestshed-api.pubxml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|c:\\users\\ranjan\\desktop\\vestshed\\vestshed\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|solutionrelative:vestshed\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|c:\\users\\ranjan\\desktop\\vestshed\\vestshed\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|solutionrelative:vestshed\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|c:\\users\\ranjan\\desktop\\vestshed\\vestshed\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|solutionrelative:vestshed\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|c:\\users\\ranjan\\desktop\\vestshed\\vestshed\\services\\serviceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|solutionrelative:vestshed\\services\\serviceservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|c:\\users\\ranjan\\desktop\\vestshed\\vestshed\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -37,10 +57,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|c:\\users\\ranjan\\desktop\\vestshed\\vestshed\\controllers\\employeescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|solutionrelative:vestshed\\controllers\\employeescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|c:\\users\\ranjan\\desktop\\vestshed\\vestshed\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A66F04EC-4B30-4F36-9921-E93F7DA4CBA0}|vestshed\\vestshed.csproj|solutionrelative:vestshed\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -55,19 +71,58 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ServiceService.cs",
-              "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Services\\ServiceService.cs",
-              "RelativeDocumentMoniker": "vestshed\\Services\\ServiceService.cs",
-              "ToolTip": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Services\\ServiceService.cs",
-              "RelativeToolTip": "vestshed\\Services\\ServiceService.cs",
-              "ViewState": "AgIAAEUAAAAAAAAAAIAwwDoAAAAbAAAAAAAAAA==",
+              "Title": "AppointmentsController.cs",
+              "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Controllers\\AppointmentsController.cs",
+              "RelativeDocumentMoniker": "vestshed\\Controllers\\AppointmentsController.cs",
+              "ToolTip": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Controllers\\AppointmentsController.cs",
+              "RelativeToolTip": "vestshed\\Controllers\\AppointmentsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-25T10:33:14.567Z",
+              "WhenOpened": "2026-03-29T16:26:42.688Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "vetsched-api - Web Deploy.pubxml",
+              "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Properties\\PublishProfiles\\vetsched-api - Web Deploy.pubxml",
+              "RelativeDocumentMoniker": "vestshed\\Properties\\PublishProfiles\\vetsched-api - Web Deploy.pubxml",
+              "ToolTip": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Properties\\PublishProfiles\\vetsched-api - Web Deploy.pubxml",
+              "RelativeToolTip": "vestshed\\Properties\\PublishProfiles\\vetsched-api - Web Deploy.pubxml",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAABgAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2026-03-29T15:42:59.946Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "vestshed-api.pubxml",
+              "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Properties\\PublishProfiles\\vestshed-api.pubxml",
+              "RelativeDocumentMoniker": "vestshed\\Properties\\PublishProfiles\\vestshed-api.pubxml",
+              "ToolTip": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Properties\\PublishProfiles\\vestshed-api.pubxml",
+              "RelativeToolTip": "vestshed\\Properties\\PublishProfiles\\vestshed-api.pubxml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2026-03-29T15:42:42.204Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "vestshed\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Properties\\launchSettings.json",
+              "RelativeToolTip": "vestshed\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-29T15:42:19.349Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "appsettings.Development.json",
               "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\appsettings.Development.json",
               "RelativeDocumentMoniker": "vestshed\\appsettings.Development.json",
@@ -79,7 +134,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 9,
               "Title": "appsettings - Copy.json",
               "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\appsettings - Copy.json",
               "RelativeDocumentMoniker": "vestshed\\appsettings - Copy.json",
@@ -91,7 +146,32 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Program.cs",
+              "RelativeDocumentMoniker": "vestshed\\Program.cs",
+              "ToolTip": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Program.cs",
+              "RelativeToolTip": "vestshed\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJ4AAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-01T08:09:44.646Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ServiceService.cs",
+              "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Services\\ServiceService.cs",
+              "RelativeDocumentMoniker": "vestshed\\Services\\ServiceService.cs",
+              "ToolTip": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Services\\ServiceService.cs",
+              "RelativeToolTip": "vestshed\\Services\\ServiceService.cs",
+              "ViewState": "AgIAAEUAAAAAAAAAAIAwwDoAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-25T10:33:14.567Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "WeatherForecastController.cs",
               "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Controllers\\WeatherForecastController.cs",
               "RelativeDocumentMoniker": "vestshed\\Controllers\\WeatherForecastController.cs",
@@ -99,11 +179,12 @@
               "RelativeToolTip": "vestshed\\Controllers\\WeatherForecastController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-01T09:30:33.139Z"
+              "WhenOpened": "2026-01-01T09:30:33.139Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\appsettings.json",
               "RelativeDocumentMoniker": "vestshed\\appsettings.json",
@@ -111,23 +192,12 @@
               "RelativeToolTip": "vestshed\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-01-01T08:10:10.33Z"
+              "WhenOpened": "2026-01-01T08:10:10.33Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Program.cs",
-              "RelativeDocumentMoniker": "vestshed\\Program.cs",
-              "ToolTip": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Program.cs",
-              "RelativeToolTip": "vestshed\\Program.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAAFYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-01T08:09:44.646Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 10,
               "Title": "ProviderOnboardingTempRequest.cs",
               "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Models\\ProviderOnboardingTempRequest.cs",
               "RelativeDocumentMoniker": "vestshed\\Models\\ProviderOnboardingTempRequest.cs",
@@ -139,7 +209,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 11,
               "Title": "ProviderOnboardingController.cs",
               "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Controllers\\ProviderOnboardingController.cs",
               "RelativeDocumentMoniker": "vestshed\\Controllers\\ProviderOnboardingController.cs",
@@ -151,7 +221,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 13,
               "Title": "EmployeesController.cs",
               "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Controllers\\EmployeesController.cs",
               "RelativeDocumentMoniker": "vestshed\\Controllers\\EmployeesController.cs",
@@ -163,7 +233,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 12,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "C:\\Users\\Ranjan\\Desktop\\vestshed\\vestshed\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "vestshed\\Data\\ApplicationDbContext.cs",

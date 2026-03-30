@@ -18,6 +18,27 @@ namespace vestshed.Controllers
         }
 
         /// <summary>
+        /// Get booked appointments for a service provider (includes service price and pet/parent info)
+        /// </summary>
+        [HttpGet("by-service-provider/{serviceProviderId}")]
+        public async Task<ActionResult<AppointmentResponse>> GetAppointmentsByServiceProvider(int serviceProviderId)
+        {
+            try
+            {
+                if (serviceProviderId <= 0)
+                    return BadRequest(new AppointmentResponse { Success = false, Message = "serviceProviderId must be greater than 0" });
+
+                var result = await _context.GetAppointmentsByServiceProviderAsync(serviceProviderId);
+                return Ok(new AppointmentResponse { Success = true, Message = "Appointments retrieved successfully", Data = result });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving appointments for service provider {ServiceProviderId}", serviceProviderId);
+                return StatusCode(500, new AppointmentResponse { Success = false, Message = $"An error occurred: {ex.Message}" });
+            }
+        }
+
+        /// <summary>
         /// Book an appointment for one or more pets
         /// </summary>
         [HttpPost("book")]
